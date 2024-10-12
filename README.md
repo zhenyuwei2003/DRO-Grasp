@@ -20,7 +20,7 @@ Official Code Repository for **$\mathcal{D(R,O)}$ Grasp: A Unified Representatio
     </a>
 </p>
 <div align="center">
-  <img src="pipeline.png" alt="main" width="95%">
+  <img src="pipeline.jpg" alt="main" width="95%">
 </div>
 
 
