@@ -161,40 +161,29 @@ The original `MultiDex` and `CMapDataset` are also included for pretraining purp
 
 ```bash
 DRO-Grasp
-├── ckpt
-│   └── ...  # Checkpoint models stored here
-├── configs
-│   └── ...  # Configuration files
-├── data
-│   └── ...  # Datasets downloaded and stored here
-├── data_utils
-│   └── ...  # Dataset classes and related scripts
-├── model
-│   └── ...  # Network architecture code
-├── output
-│   └── ...  # Saved model checkpoints and log files
-├── tmp
-│   └── ...  # Temporary files generated during subprocess execution
+├── ckpt  # Checkpoint models stored here
+├── configs  # Configuration files
+├── data  # Datasets downloaded and stored here
+├── data_utils  # Dataset classes and related scripts
+├── model  # Network architecture code
+├── output  # Saved model checkpoints and log files
+├── tmp  # Temporary files generated during subprocess execution
 ├── scripts
-│   ├── download_ckpt.sh     # Download checkpoint models
-│   ├── download_data.sh     # Download data
-│   ├── example_isaac.py     # Test Isaac Gym environment and evaluate our model's performance
+│   ├── download_ckpt.sh  # Download checkpoint models
+│   ├── download_data.sh  # Download data
+│   ├── example_isaac.py  # Test Isaac Gym environment and evaluate our model's performance
 │   ├── example_pretrain.py  # Evaluate our pretrained model's performance
-│   └── pretrain_order.py    # Evaluate performance of pretrained model
-├── utils
-│   └── ...  # Various utility scripts
-├── validate
-│   └── ...  # Scripts for validating in Isaac Gym
-├── validate_output
-│   └── ...  # Validation results saved here
-├── vis_info
-│   └── ...  # Visualization information saved during validation
+│   └── pretrain_order.py  # Evaluate performance of pretrained model
+├── utils  # Various utility scripts
+├── validate  # Scripts for validating in Isaac Gym
+├── validate_output  # Validation results saved here
+├── vis_info  # Visualization information saved during validation
 └── visualization
 │   ├── vis_controller.py  # Visualize the effect of the grasp controller
-│   ├── vis_dataset.py     # Visualize grasps from the dataset
+│   ├── vis_dataset.py  # Visualize grasps from the dataset
 │   ├── vis_hand_joint.py  # Visualize hand joint movements
-│   ├── vis_hand_link.py   # Visualize hand links
-│   ├── vis_pretrain.py    # Visualize pretrain matching results
+│   ├── vis_hand_link.py  # Visualize hand links
+│   ├── vis_pretrain.py  # Visualize pretrain matching results
 │   └── vis_validation.py  # Visualize validation results    
 ├── pretrain.py  # Main scripts for pretraining
 ├── train.py     # Main scripts for training
