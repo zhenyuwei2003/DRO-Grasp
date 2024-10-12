@@ -1,0 +1,37 @@
+defaults:
+  - log.yaml
+  - model.yaml
+  - dataset: pretrain_dataset.yaml
+  - _self_
+
+name: 'pretrain_3robots'
+
+seed: 42
+gpu:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+
+load_from_checkpoint: False
+log_every_n_steps: 5
+
+wandb:  # override log.yaml
+  project: 'DROGrasp-Pretrain'
+
+model:  # override model.yaml
+    encoder:
+        pretrain: null
+
+training:
+  max_epochs: 100
+
+  save_dir: '${output_dir}/state_dict'
+  save_every_n_epoch: 5
+
+  lr: 1e-4
+  temperature: 0.1

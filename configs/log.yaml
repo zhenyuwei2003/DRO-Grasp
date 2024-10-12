@@ -1,0 +1,15 @@
+output_dir: 'output/${name}'
+log_dir: '${output_dir}/log'
+
+hydra:
+  run:
+    dir: '${log_dir}/hydra'
+  sweep:
+    dir: '${log_dir}/hydra-multirun/'
+
+wandb:
+  save_dir: '${log_dir}'
+  project: 'DROGrasp'
+
+lightning:
+  checkpoint_dir: '${log_dir}/checkpoints'

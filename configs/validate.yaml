@@ -1,0 +1,26 @@
+defaults:
+    - model.yaml
+    - dataset: cmap_dataset.yaml
+    - _self_
+
+model:  # override model.yaml
+    encoder:
+        pretrain: null
+
+dataset:  # override cmap_dataset.yaml
+    batch_size: 100  # total grasps of (robot, object) combination
+
+split_batch_size: 25  # limited by GPU memory
+gpu: 0
+name: '3robots'
+validate_epochs:
+    - 10
+    - 20
+    - 30
+    - 40
+#    - 50
+#    - 60
+#    - 70
+#    - 80
+#    - 90
+#    - 100

@@ -1,0 +1,12 @@
+**/__pycache__/
+.idea/
+logs/
+lightning_logs/
+
+ckpt/
+data/
+output/
+outputs/
+tmp/
+validate_output/
+vis_info/

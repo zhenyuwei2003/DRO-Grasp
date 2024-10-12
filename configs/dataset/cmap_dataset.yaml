@@ -1,0 +1,10 @@
+robot_names:
+  - 'barrett'
+  - 'allegro'
+  - 'shadowhand'
+
+debug_object_names: null  # use part of the dataset, for debug only
+
+batch_size: 8  # 1 batch_size ≈ 4 GB GPU memory during training
+num_workers: 16
+object_pc_type: 'random'  # 'fixed', 'random', 'partial'
