@@ -19,7 +19,11 @@ Official Code Repository for **$\mathcal{D(R,O)}$ Grasp: A Unified Representatio
       <img src='https://img.shields.io/badge/Project-Page-66C0FF?style=plastic&logo=Google%20chrome&logoColor=66C0FF' alt='Project Page'>
     </a>
 </p>
-![pipeline](pipeline.png)
+<div align="center">
+  <img src="pipeline.png" alt="main" width="95%">
+</div>
+
+
 In this paper, we present $\mathcal{D(R,O)}$ Grasp, a novel framework that models the interaction between the robotic hand in its grasping pose and the object, enabling broad generalization across various robot hands and object geometries. Our model takes the robot hand’s description and object point cloud as inputs and efficiently predicts kinematically valid and stable grasps, demonstrating strong adaptability to diverse robot embodiments and object geometries.
 
 ----------------
