@@ -6,7 +6,7 @@ from termcolor import cprint
 import hydra
 import numpy as np
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(ROOT_DIR)
 
 from model.network import create_network
@@ -18,7 +18,7 @@ from utils.hand_model import create_hand_model
 from validation.validate_utils import validate_isaac
 
 
-@hydra.main(version_base="1.2", config_path="../configs", config_name="validate")
+@hydra.main(version_base="1.2", config_path="configs", config_name="validate")
 def main(cfg):
     device = torch.device(f'cuda:{cfg.gpu}')
     batch_size = cfg.dataset.batch_size

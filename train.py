@@ -7,7 +7,7 @@ import pytorch_lightning as pl
 from omegaconf import OmegaConf
 from pytorch_lightning.loggers import WandbLogger
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(ROOT_DIR)
 
 from data_utils.CMapDataset import create_dataloader
@@ -15,7 +15,7 @@ from model.network import create_network
 from model.module import TrainingModule
 
 
-@hydra.main(version_base="1.2", config_path="../configs", config_name="train")
+@hydra.main(version_base="1.2", config_path="configs", config_name="train")
 def main(cfg):
     print("******************************** [Config] ********************************")
     print(OmegaConf.to_yaml(cfg))

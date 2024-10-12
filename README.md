@@ -68,7 +68,13 @@ This project use Weights & Biases to monitor loss curves. If you're not familiar
 
 ## Example
 
-First, download our [checkpoint models](https://github.com/zhenyuwei2003/DRO-Grasp/releases/tag/v1.0) and place them in the `ckpt/` directory. To verify that the Isaac Gym environment is correctly installed and to evaluate the performance of our model, run `python scripts/example_isaac.py`. You can also run `python scripts/example_pretrain.py` to obtain the matching order of our pretrained model, which is a good indicator of its effectiveness. You can visualize the correspondence matching results by running `python visualizatino/vis_pretrain.py`.
+Download our [checkpoint models](https://github.com/zhenyuwei2003/DRO-Grasp/releases/tag/v1.0) and unzip the contents into the `ckpt/` folder, or simply execute:
+
+```bash
+bash scripts/download_ckpt.sh
+```
+
+To verify that the Isaac Gym environment is correctly installed and to evaluate the performance of our model, run `python scripts/example_isaac.py`. You can also run `python scripts/example_pretrain.py` to obtain the matching order of our pretrained model, which is a good indicator of its effectiveness. You can visualize the correspondence matching results by running `python visualizatino/vis_pretrain.py`.
 
 ## How to use?
 
@@ -86,7 +92,7 @@ You need to modify the configuration file based on your requirements. Below are 
 After updating the config file, simply run:
 
 ```bash
-python scripts/pretrain.py
+python pretrain.py
 ```
 
 To assess the performance of the pretrained model, which is best indicated by lower matching order values, you can run the following command:
@@ -117,7 +123,7 @@ You need to modify the configuration file based on your requirements. Below are 
 After updating the config file, simply run:
 
 ```
-python scripts/train.py
+python train.py
 ```
 
 ### Validation
@@ -138,12 +144,18 @@ You need to modify the configuration file based on your requirements. Below are 
 After updating the config file, simply run:
 
 ```
-python scripts/validate.py
+python validate.py
 ```
 
 ## Dataset
 
-You can download our filtered dataset, URDF files and point clouds [here](https://github.com/zhenyuwei2003/DRO-Grasp/releases/tag/v1.0). Extract the contents into the `data/` folder. The original `MultiDex` and `CMapDataset` are also included for pretraining purposes. For more details on these datasets, refer to [GenDexGrasp](https://github.com/tengyu-liu/GenDexGrasp).
+You can download our filtered dataset, URDF files and point clouds [here](https://github.com/zhenyuwei2003/DRO-Grasp/releases/tag/v1.0) and unzip the contents into the `data/` folder, or simply execute:
+
+```bash
+bash scripts/download_data.sh
+```
+
+The original `MultiDex` and `CMapDataset` are also included for pretraining purposes. For more details on these datasets, refer to [GenDexGrasp](https://github.com/tengyu-liu/GenDexGrasp).
 
 ## Repository Structure
 
@@ -164,12 +176,11 @@ DRO-Grasp
 ├── tmp
 │   └── ...  # Temporary files generated during subprocess execution
 ├── scripts
+│   ├── download_ckpt.sh     # Download checkpoint models
+│   ├── download_data.sh     # Download data
 │   ├── example_isaac.py     # Test Isaac Gym environment and evaluate our model's performance
 │   ├── example_pretrain.py  # Evaluate our pretrained model's performance
-│   ├── pretrain_order.py    # Evaluate performance of pretrained model
-│   ├── pretrain.py          # Main scripts for pretraining
-│   ├── train.py             # Main scripts for training
-│   └── validate.py          # Main scripts for validation
+│   └── pretrain_order.py    # Evaluate performance of pretrained model
 ├── utils
 │   └── ...  # Various utility scripts
 ├── validate
@@ -179,12 +190,15 @@ DRO-Grasp
 ├── vis_info
 │   └── ...  # Visualization information saved during validation
 └── visualization
-    ├── vis_controller.py  # Visualize the effect of the grasp controller
-    ├── vis_dataset.py     # Visualize grasps from the dataset
-    ├── vis_hand_joint.py  # Visualize hand joint movements
-    ├── vis_hand_link.py   # Visualize hand links
-    ├── vis_pretrain.py    # Visualize pretrain matching results
-    └── vis_validation.py  # Visualize validation results
+│   ├── vis_controller.py  # Visualize the effect of the grasp controller
+│   ├── vis_dataset.py     # Visualize grasps from the dataset
+│   ├── vis_hand_joint.py  # Visualize hand joint movements
+│   ├── vis_hand_link.py   # Visualize hand links
+│   ├── vis_pretrain.py    # Visualize pretrain matching results
+│   └── vis_validation.py  # Visualize validation results    
+├── pretrain.py  # Main scripts for pretraining
+├── train.py     # Main scripts for training
+└── validate.py  # Main scripts for validation
 ```
 
 ## Steps to Apply our Method to a New Hand

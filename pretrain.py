@@ -7,7 +7,7 @@ import torch
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
 
-ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(ROOT_DIR)
 
 from model.module import PretrainingModule
@@ -15,7 +15,7 @@ from model.network import create_encoder_network
 from data_utils.PretrainDataset import create_dataloader
 
 
-@hydra.main(version_base="1.2", config_path="../configs", config_name="pretrain")
+@hydra.main(version_base="1.2", config_path="configs", config_name="pretrain")
 def main(cfg):
     print("******************************** [Config] ********************************")
     print(OmegaConf.to_yaml(cfg))
