@@ -34,7 +34,13 @@ server.scene.add_mesh_simple(
 
 def update(q):
     trimesh = hand.get_trimesh_q(q)["visual"]
-    server.scene.add_mesh_trimesh(robot_name, trimesh, visible=True)
+    server.scene.add_mesh_simple(
+        robot_name,
+        trimesh.vertices,
+        trimesh.faces,
+        color=(102, 192, 255),
+        opacity=0.8
+    )
 
 gui_joints = []
 for i, joint_name in enumerate(hand.get_joint_orders()):
