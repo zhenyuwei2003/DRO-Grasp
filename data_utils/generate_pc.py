@@ -42,17 +42,6 @@ def generate_robot_pc(args):
     hand = create_hand_model(args.robot_name, torch.device('cpu'), args.num_points)
     links_pc = hand.vertices
     sampled_pc, sampled_pc_index = hand.get_sampled_pc(num_points=args.num_points)
-    if args.robot_vis:
-        server = viser.ViserServer(host='127.0.0.1', port=8080)
-        server.scene.add_point_cloud(
-            'point cloud',
-            sampled_pc[:, :3].numpy(),
-            point_size=0.001,
-            point_shape="circle",
-            colors=(0, 0, 200)
-        )
-        while True:
-            time.sleep(1)
 
     filtered_links_pc = {}
     for link_index, (link_name, points) in enumerate(links_pc.items()):
@@ -60,7 +49,7 @@ def generate_robot_pc(args):
                 if link_index * args.num_points <= i < (link_index + 1) * args.num_points]
         links_pc[link_name] = torch.tensor(points, dtype=torch.float32)
         filtered_links_pc[link_name] = torch.tensor(points[mask], dtype=torch.float32)
-        print(link_name, links_pc[link_name].shape, filtered_links_pc[link_name].shape)
+        print(f"[{link_name}] original shape: {links_pc[link_name].shape}, filtered shape: {filtered_links_pc[link_name].shape}")
 
     data = {
         'original': links_pc,
@@ -68,6 +57,17 @@ def generate_robot_pc(args):
     }
     torch.save(data, output_path)
     print("\nGenerating robot point cloud finished.")
+
+    server = viser.ViserServer(host='127.0.0.1', port=8080)
+    server.scene.add_point_cloud(
+        'point cloud',
+        sampled_pc[:, :3].numpy(),
+        point_size=0.001,
+        point_shape="circle",
+        colors=(0, 0, 200)
+    )
+    while True:
+        time.sleep(1)
 
 
 if __name__ == '__main__':
@@ -79,11 +79,7 @@ if __name__ == '__main__':
     parser.add_argument('--object_source_path', default='data/data_urdf/object', type=str)
     # for robot pc generation
     parser.add_argument('--robot_name', default='shadowhand', type=str)
-    parser.add_argument('--robot_vis', action='store_true')
     args = parser.parse_args()
-
-    if args.robot_vis:
-        print("[WARNING] Robot point cloud will not be saved when using --robot_vis!")
 
     if args.type == 'robot':
         generate_robot_pc(args)

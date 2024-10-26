@@ -192,11 +192,14 @@ DRO-Grasp
 
 ## Steps to Apply our Method to a New Hand
 
-1. Add the hand's URDF and mesh paths to `data/data_urdf/robot/urdf_assets_meta.json`
-2. Specify redundant link names in `data_utils/remove_links.json`. You can visualize the links using `visualization/vis_hand_link.py` to identify which links are irrelevant for contact.
-3. Use `data_utils/generate_pc.py` to sample point clouds for each robot link and save them.
-4. Annotate the `link_dir` for all links in the `get_link_dir()` function of `utils/controller.py`. You can adjust the direction of each link using `vis_hand_direction()` in `visualization/vis_controller.py`, ensuring that the arrow points in the correct direction of motion when the joint value increases.
-5. Pretrain and train the model using your own grasp dataset.
+1. Modify your hand's URDF. You can refer to an existing URDF file for guidance on making modifications.
+    - Add virtual joints between the world and the robot to represent the base link transform.  Ensure these joint names start with `virtual` so the controller can ignore them.
+    - Use `visualization/vis_optimization.py` to view the optimization result. If no fixed joint exists at the tip links, the optimized point cloud may not align with the target point cloud at those links. In this case, add extra links beyond each tip link and ensure their names begin with `extra` so their transforms are processed before optimization.
+2. Add the hand's URDF and mesh paths to `data/data_urdf/robot/urdf_assets_meta.json`
+3. Specify redundant link names in `data_utils/remove_links.json`. You can visualize the links using `visualization/vis_hand_link.py` to identify which links are irrelevant for contact.
+4. Use `data_utils/generate_pc.py` to sample point clouds for each robot link and save them.
+5. Annotate the `link_dir` for all links in the `get_link_dir()` function of `utils/controller.py`. You can adjust the direction of each link using `vis_hand_direction()` in `visualization/vis_controller.py`, ensuring that the arrow points in the correct direction of motion when the joint value increases.
+6. Pretrain and train the model using your own grasp dataset.
 
 ## Citation
 

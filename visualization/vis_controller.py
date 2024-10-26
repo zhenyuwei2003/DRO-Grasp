@@ -78,7 +78,7 @@ def vis_controller_result(robot_name='shadowhand', object_name=None):
 def vis_hand_direction(robot_name='shadowhand'):
     server = viser.ViserServer(host='127.0.0.1', port=8080)
 
-    hand = create_hand_model(robot_name)
+    hand = create_hand_model(robot_name, device='cpu')
     q = hand.get_canonical_q()
     joint_orders = hand.get_joint_orders()
     lower, upper = hand.pk_chain.get_joint_limits()
@@ -153,7 +153,10 @@ def vis_hand_direction(robot_name='shadowhand'):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--robot_name', default='shadowhand', type=str)
+    parser.add_argument('--controller', action='store_true')
     args = parser.parse_args()
 
-    # vis_hand_direction(args.robot_name)
-    vis_controller_result(args.robot_name)
+    if args.controller:
+        vis_controller_result(args.robot_name)
+    else:
+        vis_hand_direction(args.robot_name)

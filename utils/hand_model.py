@@ -59,7 +59,7 @@ class HandModel:
     def update_status(self, q):
         if q.shape[-1] != self.dof:
             q = q_rot6d_to_q_euler(q)
-        self.frame_status = self.pk_chain.forward_kinematics(q)
+        self.frame_status = self.pk_chain.forward_kinematics(q.to(self.device))
 
     def get_transformed_links_pc(self, q=None, links_pc=None):
         """
