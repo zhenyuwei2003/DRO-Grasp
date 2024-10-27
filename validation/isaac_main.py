@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import argparse
+import warnings
 from termcolor import cprint
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,13 +15,15 @@ from utils.rotation import q_rot6d_to_q_euler
 import torch
 
 
-def isaac_main(mode: str,
-               robot_name: str,
-               object_name: str,
-               batch_size: int,
-               q_batch: torch.Tensor = None,
-               gpu: int = 0,
-               use_gui: bool = False):
+def isaac_main(
+    mode: str,
+    robot_name: str,
+    object_name: str,
+    batch_size: int,
+    q_batch: torch.Tensor = None,
+    gpu: int = 0,
+    use_gui: bool = False
+):
     """
     For filtering dataset and validating grasps.
 
@@ -85,6 +88,7 @@ def isaac_main(mode: str,
 
 # for Python scripts subprocess call to avoid Isaac Gym GPU memory leak problem
 if __name__ == '__main__':
+    warnings.simplefilter(action='ignore', category=FutureWarning)
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', type=str, required=True)
     parser.add_argument('--robot_name', type=str, required=True)

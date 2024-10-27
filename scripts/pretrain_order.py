@@ -1,12 +1,12 @@
 import os
 import sys
-from types import SimpleNamespace
-from tqdm import tqdm
-import argparse
-import torch
-
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(ROOT_DIR)
+import argparse
+import warnings
+from types import SimpleNamespace
+from tqdm import tqdm
+import torch
 
 from model.network import create_encoder_network
 from data_utils.CMapDataset import create_dataloader
@@ -68,6 +68,7 @@ def main(args):
 
 
 if __name__ == '__main__':
+    warnings.simplefilter(action='ignore', category=FutureWarning)
     parser = argparse.ArgumentParser()
     parser.add_argument('--pretrain_ckpt', type=str, default='pretrain_3robots')
     parser.add_argument('--data_num', type=int, default=200)

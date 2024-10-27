@@ -99,7 +99,7 @@ To assess the performance of the pretrained model, which is best indicated by lo
 
 ```bash
 python scripts/pretrain_order.py \
-  --pretrain_ckpt pretrained_3robots \      # specify your model name
+  --pretrain_ckpt pretrain_3robots \      # specify your model name
   --data_num 200 \                          # number of grasps for one robot
   --epoch_list 10,20,30,40,50 \             # epochs of the pretrained model you want to test
   --robot_names barrett,allegro,shadowhand  # list of robots
