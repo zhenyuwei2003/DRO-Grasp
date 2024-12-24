@@ -2,7 +2,7 @@
 
 Official Code Repository for **$\mathcal{D(R,O)}$ Grasp: A Unified Representation of Robot and Object Interaction for Cross-Embodiment Dexterous Grasping**.
 
-[Zhenyu Wei](https://zhenyuwei2003.github.io/)<sup>1,2 *</sup>, [Zhixuan Xu](https://ariszxxu.github.io/)<sup>1 *</sup>, [Jingxiang Guo](https://borisguo6.github.io)<sup>1</sup>, [Yiwen Hou](https://houyiwen.github.io/)<sup>1</sup>, [Chongkai Gao](https://chongkaigao.com/)<sup>1</sup>, Zhehao Cai<sup>1</sup>, Jiayu Luo<sup>1</sup>, [Lin Shao](https://linsats.github.io/)<sup>1</sup>
+[Zhenyu Wei](https://zhenyuwei2003.github.io/)<sup>1,2\*</sup>, [Zhixuan Xu](https://ariszxxu.github.io/)<sup>1\*</sup>, [Jingxiang Guo](https://borisguo6.github.io)<sup>1</sup>, [Yiwen Hou](https://houyiwen.github.io/)<sup>1</sup>, [Chongkai Gao](https://chongkaigao.com/)<sup>1</sup>, Zhehao Cai<sup>1</sup>, Jiayu Luo<sup>1</sup>, [Lin Shao](https://linsats.github.io/)<sup>1</sup>
 
 <sup>1</sup>National University of Singapore, <sup>2</sup>Shanghai Jiao Tong University
 
@@ -207,7 +207,7 @@ If you find our codes or models useful in your work, please cite [our paper](htt
 
 ```
 @article{wei2024dro,
-    title={D(R, O) Grasp: A Unified Representation of Robot and Object Interaction for Cross-Embodiment Dexterous Grasping},
+    title={D(R,O) Grasp: A Unified Representation of Robot and Object Interaction for Cross-Embodiment Dexterous Grasping},
     author={Wei, Zhenyu and Xu, Zhixuan and Guo, Jingxiang and Hou, Yiwen and Gao, Chongkai and Cai, Zhehao and Luo, Jiayu and Shao, Lin},
     journal={arXiv preprint arXiv:2410.01702},
     year={2024}
