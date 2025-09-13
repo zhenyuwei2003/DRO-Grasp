@@ -206,11 +206,16 @@ DRO-Grasp
 If you find our codes or models useful in your work, please cite [our paper](https://arxiv.org/abs/2410.01702):
 
 ```
-@article{wei2024dro,
-    title={D(R,O) Grasp: A Unified Representation of Robot and Object Interaction for Cross-Embodiment Dexterous Grasping},
+@INPROCEEDINGS{11127754,
     author={Wei, Zhenyu and Xu, Zhixuan and Guo, Jingxiang and Hou, Yiwen and Gao, Chongkai and Cai, Zhehao and Luo, Jiayu and Shao, Lin},
-    journal={arXiv preprint arXiv:2410.01702},
-    year={2024}
+    booktitle={2025 IEEE International Conference on Robotics and Automation (ICRA)}, 
+    title={$\mathcal{D}(\mathcal{R}, \mathcal{O})$ Grasp: A Unified Representation of Robot and Object Interaction for Cross-Embodiment Dexterous Grasping}, 
+    year={2025},
+    volume={},
+    number={},
+    pages={4982-4988},
+    keywords={Hands;Geometry;Point cloud compression;Adaptation models;Computational modeling;Grasping;Predictive models;Computational efficiency;Robots;Videos},
+    doi={10.1109/ICRA55743.2025.11127754}
 }
 ```
 
