@@ -31,6 +31,13 @@ class HandModel:
         self.meshes_path = meshes_path
         self.device = device
 
+        with open(urdf_path, encoding='utf-8') as f:
+            urdf_data = f.read()
+        if not os.path.exists(urdf_path):
+            raise FileNotFoundError(f"URDF file not found: {urdf_path}")
+
+        self.pk_chain = pk.build_chain_from_urdf(urdf_data).to(dtype=torch.float32, device=device)
+
         self.pk_chain = pk.build_chain_from_urdf(open(urdf_path).read()).to(dtype=torch.float32, device=device)
         self.dof = len(self.pk_chain.get_joint_parameter_names())
         if os.path.exists(links_pc_path):  # In case of generating robot links pc, the file doesn't exist.
