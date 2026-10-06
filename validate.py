@@ -16,11 +16,13 @@ from utils.se3_transform import compute_link_pose
 from utils.optimization import *
 from utils.hand_model import create_hand_model
 from validation.validate_utils import validate_isaac
+from utils.device_utils import resolve_device
 
 
 @hydra.main(version_base="1.2", config_path="configs", config_name="validate")
 def main(cfg):
-    device = torch.device(f'cuda:{cfg.gpu}')
+    device_index = cfg.get('device_index', cfg.get('gpu', 0))
+    device = resolve_device(cfg.get('device', 'auto'), device_index)
     batch_size = cfg.dataset.batch_size
     print(f"Device: {device}")
     print('Name:', cfg.name)
@@ -123,9 +125,14 @@ def main(cfg):
                 for k, v in transform.items():
                     transform_batch[k] = v if k not in transform_batch else torch.cat((transform_batch[k], v), dim=0)
 
-            success, isaac_q = validate_isaac(robot_name, object_name, predict_q_batch, gpu=cfg.gpu)
+            success, isaac_q = validate_isaac(
+                robot_name,
+                object_name,
+                predict_q_batch,
+                gpu=cfg.get('isaac_gpu', cfg.get('gpu', 0)),
+            )
             succ_num = success.sum().item() if success is not None else -1
-            success_q = predict_q_batch[success]
+            success_q = predict_q_batch[success.to(predict_q_batch.device)]
             all_success_q.append(success_q)
 
             vis_info.append({

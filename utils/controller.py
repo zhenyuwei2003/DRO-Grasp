@@ -13,40 +13,40 @@ from utils.hand_model import create_hand_model
 from utils.rotation import q_rot6d_to_q_euler
 
 
-def get_link_dir(robot_name, joint_name):
+def get_link_dir(robot_name, joint_name, device=None):
     if joint_name.startswith('virtual'):
         return None
 
     if robot_name == 'allegro':
         if joint_name in ['joint_0.0', 'joint_4.0', 'joint_8.0', 'joint_13.0']:
             return None
-        link_dir = torch.tensor([0, 0, 1], dtype=torch.float32)
+        link_dir = torch.tensor([0, 0, 1], dtype=torch.float32, device=device)
     elif robot_name == 'barrett':
         if joint_name in ['bh_j11_joint', 'bh_j21_joint']:
             return None
-        link_dir = torch.tensor([-1, 0, 0], dtype=torch.float32)
+        link_dir = torch.tensor([-1, 0, 0], dtype=torch.float32, device=device)
     elif robot_name == 'ezgripper':
-        link_dir = torch.tensor([1, 0, 0], dtype=torch.float32)
+        link_dir = torch.tensor([1, 0, 0], dtype=torch.float32, device=device)
     elif robot_name == 'robotiq_3finger':
         if joint_name in ['gripper_fingerB_knuckle', 'gripper_fingerC_knuckle']:
             return None
-        link_dir = torch.tensor([0, 0, -1], dtype=torch.float32)
+        link_dir = torch.tensor([0, 0, -1], dtype=torch.float32, device=device)
     elif robot_name == 'shadowhand':
         if joint_name in ['WRJ2', 'WRJ1']:
             return None
         if joint_name != 'THJ5':
-            link_dir = torch.tensor([0, 0, 1], dtype=torch.float32)
+            link_dir = torch.tensor([0, 0, 1], dtype=torch.float32, device=device)
         else:
-            link_dir = torch.tensor([1, 0, 0], dtype=torch.float32)
+            link_dir = torch.tensor([1, 0, 0], dtype=torch.float32, device=device)
     elif robot_name == 'leaphand':
         if joint_name in ['13']:
             return None
         if joint_name in ['0', '4', '8']:
-            link_dir = torch.tensor([1, 0, 0], dtype=torch.float32)
+            link_dir = torch.tensor([1, 0, 0], dtype=torch.float32, device=device)
         elif joint_name in ['1', '5', '9', '12', '14']:
-            link_dir = torch.tensor([0, 1, 0], dtype=torch.float32)
+            link_dir = torch.tensor([0, 1, 0], dtype=torch.float32, device=device)
         else:
-            link_dir = torch.tensor([0, -1, 0], dtype=torch.float32)
+            link_dir = torch.tensor([0, -1, 0], dtype=torch.float32, device=device)
     else:
         raise NotImplementedError(f"Unknown robot name: {robot_name}!")
 
@@ -70,7 +70,7 @@ def controller(robot_name, q_para):
         for frame_name in pk_chain.get_frame_names():
             frame = pk_chain.find_frame(frame_name)
             joint = frame.joint
-            link_dir = get_link_dir(robot_name, joint.name)
+            link_dir = get_link_dir(robot_name, joint.name, device=frame_transform.device)
             if link_dir is None:
                 continue
 

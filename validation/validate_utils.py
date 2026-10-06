@@ -74,7 +74,7 @@ def validate_isaac(robot_name, object_name, q_batch, gpu: int = 0):
     """
     os.makedirs(os.path.join(ROOT_DIR, 'tmp'), exist_ok=True)
     q_file_path = str(os.path.join(ROOT_DIR, f'tmp/q_list_validate_{gpu}.pt'))
-    torch.save(q_batch, q_file_path)
+    torch.save(q_batch.cpu(), q_file_path)
     batch_size = q_batch.shape[0]
     args = [
         'python',

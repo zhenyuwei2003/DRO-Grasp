@@ -13,6 +13,7 @@ sys.path.append(ROOT_DIR)
 from data_utils.CMapDataset import create_dataloader
 from model.network import create_network
 from model.module import TrainingModule
+from utils.device_utils import empty_device_cache, lightning_device_config, resolve_device
 
 
 @hydra.main(version_base="1.2", config_path="configs", config_name="train")
@@ -46,11 +47,17 @@ def main(cfg):
         id=last_run_id,
         project=cfg.wandb.project
     )
+    device_indices = list(cfg.get('device_indices', cfg.get('gpu', [0])))
+    accelerator, devices = lightning_device_config(cfg.get('device', 'auto'), device_indices)
+    print(f"Training accelerator: {accelerator}; devices: {devices}")
+    strategy = 'ddp_find_unused_parameters_true' if (cfg.model.pretrain is not None) else 'auto'
+    if resolve_device(cfg.get('device', 'auto'), device_indices[0]).type == 'xpu':
+        strategy = 'auto'
     trainer = pl.Trainer(
         logger=logger,
-        accelerator='gpu',
-        strategy='ddp_find_unused_parameters_true' if (cfg.model.pretrain is not None) else 'auto',
-        devices=cfg.gpu,
+        accelerator=accelerator,
+        strategy=strategy,
+        devices=devices,
         log_every_n_steps=cfg.log_every_n_steps,
         max_epochs=cfg.training.max_epochs,
         gradient_clip_val=0.1
@@ -73,7 +80,7 @@ def main(cfg):
 if __name__ == "__main__":
     torch.set_float32_matmul_precision("high")
     torch.autograd.set_detect_anomaly(True)
-    torch.cuda.empty_cache()
+    empty_device_cache(resolve_device("auto"))
     torch.multiprocessing.set_sharing_strategy("file_system")
     warnings.simplefilter(action='ignore', category=FutureWarning)
     main()

@@ -13,6 +13,7 @@ sys.path.append(ROOT_DIR)
 from model.module import PretrainingModule
 from model.network import create_encoder_network
 from data_utils.PretrainDataset import create_dataloader
+from utils.device_utils import empty_device_cache, lightning_device_config, resolve_device
 
 
 @hydra.main(version_base="1.2", config_path="configs", config_name="pretrain")
@@ -28,10 +29,13 @@ def main(cfg):
         save_dir=cfg.wandb.save_dir,
         project=cfg.wandb.project
     )
+    device_indices = list(cfg.get('device_indices', cfg.get('gpu', [0])))
+    accelerator, devices = lightning_device_config(cfg.get('device', 'auto'), device_indices)
+    print(f"Pretraining accelerator: {accelerator}; devices: {devices}")
     trainer = pl.Trainer(
         logger=logger,
-        accelerator='gpu',
-        devices=cfg.gpu,
+        accelerator=accelerator,
+        devices=devices,
         log_every_n_steps=cfg.log_every_n_steps,
         max_epochs=cfg.training.max_epochs
     )
@@ -50,7 +54,7 @@ def main(cfg):
 if __name__ == "__main__":
     torch.set_float32_matmul_precision("high")
     torch.autograd.set_detect_anomaly(True)
-    torch.cuda.empty_cache()
+    empty_device_cache(resolve_device("auto"))
     torch.multiprocessing.set_sharing_strategy("file_system")
     warnings.simplefilter(action='ignore', category=FutureWarning)
     main()

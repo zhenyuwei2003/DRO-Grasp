@@ -106,7 +106,10 @@ class HandModel:
     def get_canonical_q(self):
         """ For visualization purposes only. """
         lower, upper = self.pk_chain.get_joint_limits()
-        canonical_q = torch.tensor(lower) * 0.75 + torch.tensor(upper) * 0.25
+        canonical_q = (
+            torch.tensor(lower, dtype=torch.float32, device=self.device) * 0.75
+            + torch.tensor(upper, dtype=torch.float32, device=self.device) * 0.25
+        )
         canonical_q[:6] = 0
         return canonical_q
 
@@ -122,12 +125,16 @@ class HandModel:
         if q is None:  # random sample root rotation and joint values
             q_initial = torch.zeros(self.dof, dtype=torch.float32, device=self.device)
 
-            q_initial[3:6] = (torch.rand(3) * 2 - 1) * torch.pi
+            q_initial[3:6] = (torch.rand(3, device=self.device) * 2 - 1) * torch.pi
             q_initial[5] /= 2
 
             lower_joint_limits, upper_joint_limits = self.pk_chain.get_joint_limits()
-            lower_joint_limits = torch.tensor(lower_joint_limits[6:], dtype=torch.float32)
-            upper_joint_limits = torch.tensor(upper_joint_limits[6:], dtype=torch.float32)
+            lower_joint_limits = torch.tensor(
+                lower_joint_limits[6:], dtype=torch.float32, device=self.device
+            )
+            upper_joint_limits = torch.tensor(
+                upper_joint_limits[6:], dtype=torch.float32, device=self.device
+            )
             portion = random.uniform(0.65, 0.85)
             q_initial[6:] = lower_joint_limits * portion + upper_joint_limits * (1 - portion)
         else:
@@ -138,7 +145,7 @@ class HandModel:
             # compute random initial rotation
             direction = - q_initial[:3] / torch.norm(q_initial[:3])
             angle = torch.tensor(random.uniform(0, max_angle), device=q.device)  # sample rotation angle
-            axis = torch.randn(3).to(q.device)  # sample rotation axis
+            axis = torch.randn(3, device=q.device)  # sample rotation axis
             axis -= torch.dot(axis, direction) * direction  # ensure orthogonality
             axis = axis / torch.norm(axis)
             random_rotation = axisangle_to_matrix(axis, angle).to(q.device)
@@ -147,8 +154,12 @@ class HandModel:
 
             # compute random initial joint values
             lower_joint_limits, upper_joint_limits = self.pk_chain.get_joint_limits()
-            lower_joint_limits = torch.tensor(lower_joint_limits[6:], dtype=torch.float32)
-            upper_joint_limits = torch.tensor(upper_joint_limits[6:], dtype=torch.float32)
+            lower_joint_limits = torch.tensor(
+                lower_joint_limits[6:], dtype=torch.float32, device=q_initial.device
+            )
+            upper_joint_limits = torch.tensor(
+                upper_joint_limits[6:], dtype=torch.float32, device=q_initial.device
+            )
             portion = random.uniform(0.65, 0.85)
             q_initial[9:] = lower_joint_limits * portion + upper_joint_limits * (1 - portion)
             # q_initial[9:] = torch.zeros_like(q_initial[9:], dtype=q.dtype, device=q.device)
@@ -212,9 +223,13 @@ class HandModel:
 
 def create_hand_model(
     robot_name,
-    device=torch.device('cuda' if torch.cuda.is_available() else 'cpu'),
+    device="auto",
     num_points=512
 ):
+    if device == "auto":
+        from utils.device_utils import resolve_device
+
+        device = resolve_device("auto")
     json_path = os.path.join(ROOT_DIR, 'data/data_urdf/robot/urdf_assets_meta.json')
     urdf_assets_meta = json.load(open(json_path))
     urdf_path = os.path.join(ROOT_DIR, urdf_assets_meta['urdf_path'][robot_name])

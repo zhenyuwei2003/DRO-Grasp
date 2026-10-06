@@ -33,13 +33,21 @@ In this paper, we present $\mathcal{D(R,O)}$ Grasp, a novel framework that model
 - Python 3.8
 - PyTorch >= 2.3.0
 
+Intel XPU additionally requires Python 3.10 or 3.11, a recent Intel GPU driver,
+and Level Zero development headers (`libze-dev` on Ubuntu) for `torch.compile`.
+
 ## Get Started
 
 ### 1. Create Python Environment
 
 ```bash
+# Existing CUDA environment
 conda create -n dro python==3.8
 conda activate dro
+
+# Intel XPU environment
+conda create -n dro-xpu python=3.10
+conda activate dro-xpu
 ```
 
 ### 2. Install Isaac Gym Environment (Optional)
@@ -56,11 +64,31 @@ pip install -e .
 
 ### 3. Install Packages
 
-Change the project directory, then run:
+Change to the project directory and install the requirements for your backend:
 
 ```bash
+# Existing NVIDIA CUDA workflow
 pip install -r requirements.txt
+
+# Intel GPU
+pip install -r requirements-xpu.txt
 ```
+
+For an Intel GPU, verify the runtime before continuing:
+
+```bash
+python -c "import torch; print(torch.__version__); print(torch.xpu.is_available()); print(torch.xpu.get_device_name(0))"
+```
+
+On Ubuntu, install the Level Zero development headers before using
+`torch.compile`:
+
+```bash
+sudo apt install libze-dev
+```
+
+An explicit `device: xpu` configuration fails if XPU is unavailable. Use
+`device: auto` to select XPU first, then CUDA, and finally CPU.
 
 ### 4. Weights & Biases (Optional)
 
@@ -77,6 +105,33 @@ bash scripts/download_data.sh
 
 To verify that the Isaac Gym environment is correctly installed and to evaluate the performance of our model, run `python scripts/example_isaac.py`. You can also run `python scripts/example_pretrain.py` to obtain the matching order of our pretrained model, which is a good indicator of its effectiveness. You can visualize the correspondence matching results by running `python visualization/vis_pretrain.py`.
 
+### Intel XPU Smoke Test
+
+Run neural inference in eager mode:
+
+```bash
+python scripts/test_xpu.py --device xpu --mode eager
+```
+
+Run eager and `torch.compile` execution on the same fixed latent tensor and compare
+their outputs:
+
+```bash
+python scripts/test_xpu.py --device xpu --mode both --output xpu_results.json
+```
+
+Optionally exercise forward, backward, and an optimizer step, or load a real model
+state dictionary:
+
+```bash
+python scripts/test_xpu.py --device xpu --mode both --training-step
+python scripts/test_xpu.py --device xpu --mode both --checkpoint ckpt/model.pth
+```
+
+The JSON result contains the PyTorch version, selected device and device name,
+output shape, eager/compiled latency, and output differences. The default test uses
+FP32, `backend="inductor"`, `fullgraph=False`, and synchronized timing.
+
 ## How to use?
 
 ### Pretraining
@@ -85,7 +140,8 @@ You need to modify the configuration file based on your requirements. Below are 
 
 - `pretrain.yaml`
     - `name`: Specify the pretraining model name.
-    - `gpu`: Set the GPU ID based on the available GPU device(s).
+  - `device`: Select `auto`, `xpu`, `cuda`, or `cpu`.
+  - `device_indices`: Set the device index. XPU training currently supports one device.
     - `training/max_epochs`: Define the number of pretraining epochs.
 - `dataset/pretrain_dataset.yaml`
     - `robot_names`: Provide the list of robot names to be used for pretraining.
@@ -112,7 +168,8 @@ You need to modify the configuration file based on your requirements. Below are 
 
 - `train.yaml`
     - `name`: Specify the training model name.
-    - `gpu`: Set the GPU ID based on the available GPU device(s).
+  - `device`: Select `auto`, `xpu`, `cuda`, or `cpu`.
+  - `device_indices`: Set one or more device indices. XPU training currently supports one device.
     - `training/max_epochs`: Define the number of training epochs.
 - `model.yaml`
     - `pretrain`: Specify the name of the pretrained model, which should be placed in the `ckpt/` folder.
@@ -133,7 +190,8 @@ You need to modify the configuration file based on your requirements. Below are 
 
 - `validate.yaml`
     - `name`: Specify the model name you want to validate.
-    - `gpu`: Set the GPU ID based on the available GPU device(s).
+  - `device` and `device_index`: Select the neural inference backend and device.
+  - `isaac_gpu`: Select the NVIDIA CUDA device used by Isaac Gym.
     - `split_batch_size`: Set the number of grasps to run in parallel in Isaac Gym, constrained by GPU memory. Maximize this value to speed up the validation process.
     - `validate_epochs`: Specify the list of epochs of the trained model to validate.
     - `dataset/batch_size`: The total number of grasps for each `(robot, object)` combination to validate.
@@ -147,6 +205,11 @@ After updating the config file, simply run:
 ```
 python validate.py
 ```
+
+Neural inference and candidate generation support Intel XPU. Isaac Gym remains
+an NVIDIA CUDA component and is configured separately. CVXPY, SciPy, inverse
+kinematics, and visualization are not claimed as XPU-accelerated. The current
+XPU training scope is one device.
 
 ## Dataset
 

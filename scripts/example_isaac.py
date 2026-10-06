@@ -17,10 +17,11 @@ from utils.se3_transform import compute_link_pose
 from utils.optimization import *
 from utils.hand_model import create_hand_model
 from validation.validate_utils import validate_isaac
+from utils.device_utils import resolve_device
 
 
 gpu = 0
-device = torch.device(f'cuda:{gpu}')
+device = resolve_device('auto', gpu)
 ckpt_name = 'model_3robots'  # 'model_3robots_partial', 'model_allegro', 'model_barrett', 'model_shadowhand'
 batch_size = 10
 
@@ -106,7 +107,7 @@ def main():
 
         success, isaac_q = validate_isaac(robot_name, object_name, predict_q_batch, gpu=gpu)
         succ_num = success.sum().item() if success is not None else -1
-        success_q = predict_q_batch[success]
+        success_q = predict_q_batch[success.to(predict_q_batch.device)]
         all_success_q.append(success_q)
 
         cprint(f"[{robot_name}/{object_name}]", 'light_blue', end=' ')

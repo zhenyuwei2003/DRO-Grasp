@@ -7,6 +7,9 @@ defaults:
 name: 'pretrain_3robots'
 
 seed: 42
+device: auto
+device_indices:
+  - 0
 gpu:
   - 0
   - 1

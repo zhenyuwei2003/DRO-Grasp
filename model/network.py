@@ -43,7 +43,7 @@ class Network(nn.Module):
 
         self.kernel = MLPKernel(cfg.emb_dim + cfg.latent_dim)
 
-    def forward(self, robot_pc, object_pc, target_pc=None):
+    def forward(self, robot_pc, object_pc, target_pc=None, latent=None):
         if self.cfg.center_pc:  # zero-mean the robot point cloud
             robot_pc = robot_pc - robot_pc.mean(dim=1, keepdim=True)
 
@@ -62,6 +62,8 @@ class Network(nn.Module):
 
         # CVAE encoder
         if self.mode == 'train':
+            if latent is not None:
+                raise ValueError("A fixed latent input is only supported in validation mode")
             grasp_pc = torch.cat([target_pc, object_pc], dim=1)
             grasp_emb = torch.cat([robot_embedding_tf, object_embedding_tf], dim=1)
             latent = self.point_encoder(torch.cat([grasp_pc, grasp_emb], -1))
@@ -70,7 +72,18 @@ class Network(nn.Module):
             z = z_dist.rsample()  # (B, latent_dim)
         else:
             mu, logvar = None, None
-            z = torch.randn(robot_pc.shape[0], self.cfg.latent_dim).to(robot_pc.device)
+            if latent is None:
+                z = torch.randn(
+                    robot_pc.shape[0],
+                    self.cfg.latent_dim,
+                    device=robot_pc.device,
+                    dtype=robot_pc.dtype,
+                )
+            else:
+                expected_shape = (robot_pc.shape[0], self.cfg.latent_dim)
+                if latent.shape != expected_shape:
+                    raise ValueError(f"Expected latent shape {expected_shape}, received {tuple(latent.shape)}")
+                z = latent.to(device=robot_pc.device, dtype=robot_pc.dtype)
         z = z.unsqueeze(dim=1).repeat(1, robot_embedding_tf.shape[1], 1)  # (B, N, latent_dim)
 
         Phi_A = torch.cat([robot_embedding_tf, z], dim=-1)  # (B, N, emb_dim + latent_dim)

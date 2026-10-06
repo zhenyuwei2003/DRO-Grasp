@@ -11,6 +11,9 @@ dataset:  # override cmap_dataset.yaml
     batch_size: 100  # total grasps of (robot, object) combination
 
 split_batch_size: 25  # limited by GPU memory
+device: auto
+device_index: 0
+isaac_gpu: 0
 gpu: 0
 name: '3robots'
 validate_epochs:
